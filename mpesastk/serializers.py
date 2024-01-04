@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
 from .validators import validate_possible_number
-from .utils import MpesaGateway
+from .utils import MpesaGateWay
 from .models import ResponseBody, Transacton
 
-pay = MpesaGateway()
+pay = MpesaGateWay()
 
 
 class SendSTKPushSerializer(serializers.Serializer):
@@ -46,13 +46,13 @@ class SendSTKPushSerializer(serializers.Serializer):
 
         return res
     
-    class ResponseBodySerializer(serializers.ModelSerializer):
-        class Meta:
-            model = ResponseBody
-            fields = '__all__'
+class MpesaResponseBodySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ResponseBody
+        fields = '__all__'
 
-        
-    class TransactionSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Transacton
-            fields = '__all__'
+    
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transacton
+        fields = '__all__'

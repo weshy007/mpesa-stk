@@ -3,11 +3,12 @@ import logging
 import requests
 import time
 
-import core.settings as settings
-
+from datetime import datetime
 from decouple import config
 from requests import Response
 from requests.auth import HTTPBasicAuth
+
+from .exceptions import *
 
 now = datetime.now()
 
@@ -37,7 +38,7 @@ def mpesa_response(r):
     return r
 
 
-class MpesaGateway:
+class MpesaGateWay:
     business_shortcode = None
     consumer_key = None
     consumer_secret = None
@@ -61,7 +62,7 @@ class MpesaGateway:
             if self.access_token is None:
                 raise Exception("Request for access token failed")
         except Exception as e:
-            logging.erro("Error {}".format(e))
+            logging.error("Error {}".format(e))
         
         else:
             self.access_token_expiration = time.time() + 3400
@@ -76,7 +77,7 @@ class MpesaGateway:
 
         else: 
             token = res.json()['access_token']
-            self.headers = {'Authorization': 'Bearer %s' % token}
+            self.headers = {"Authorization": "Bearer %s" % token}
             
             return token
         
@@ -94,7 +95,7 @@ class MpesaGateway:
 
     def generate_password(self):
         self.timestamp = now.strftime("%Y%m%d%H%M%S")
-        password_str = settings('BUSINESS_SHORTCODE') + settings('PASS_KEY' + self.timestamp)
+        password_str = config('BUSINESS_SHORTCODE') + config('PASS_KEY') + self.timestamp
         password_bytes = password_str.encode('ascii')
         return base64.b64encode(password_bytes).decode('utf-8')
     
@@ -123,6 +124,7 @@ class MpesaGateway:
             response = mpesa_response(res)
 
             return response
+        
         except requests.exceptions.ConnectionError:
             raise MpesaConnectionError('Connection failed')
         except Exception as ex:

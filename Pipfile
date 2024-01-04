@@ -9,6 +9,7 @@ djangorestframework = "*"
 python-decouple = "*"
 phonenumbers = "*"
 django-phonenumber-field = "*"
+requests = "*"
 
 [dev-packages]
 
